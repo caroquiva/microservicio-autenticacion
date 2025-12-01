@@ -7,6 +7,7 @@ RUN mvn clean package -DskipTests
 
 #Etapa de ejecución
 FROM amazoncorretto:21
+RUN yum update -y && yum install -y nmap-ncat && yum clean all
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 EXPOSE 9292

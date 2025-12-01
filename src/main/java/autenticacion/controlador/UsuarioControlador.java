@@ -42,7 +42,7 @@ public class UsuarioControlador {
 		    public ResponseEntity<String> getToken(@RequestBody Usuario user) {
 		    
 		    
-		    if(true) {
+		    if((this.servicio.verificarUsuario(user))) {
 		    	return ResponseEntity.ok(servicio.generateToken(user.getUsername().toUpperCase()));
 		    }
 		    else {
