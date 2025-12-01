@@ -5,4 +5,4 @@ metadata:
 data:
   MYSQL_DATABASE: "genosentinel"
   MYSQL_USER: "root"
-  SPRING_DATASOURCE_URL: "jdbc:mysql://autenticacion-mysql-service:3306/genosentinel"
+  SPRING_DATASOURCE_URL: "jdbc:mysql://mysql-service:3306/genosentinel"
