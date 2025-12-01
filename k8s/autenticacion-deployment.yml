@@ -12,23 +12,54 @@ spec:
       labels:
         app: autenticacion
     spec:
-      containers:
-        - name: autenticacion-app
+      initContainers:
+        - name: wait-and-migrate
           image: dgomez9903/microservicio-autenticacion:1.0.0
-          ports:
-            - containerPort: 9292
+          command:
+            [
+              "sh",
+              "-c",
+              "echo 'Esperando MySQL...' && \
+             until nc -z ${MYSQL_HOST} ${MYSQL_PORT}; do echo 'MySQL no disponible, reintentando...'; sleep 2; done; \
+             echo 'MySQL listo.'"
+            ]
           envFrom:
             - configMapRef:
-                name: autenticacion-configmap
+                name: autenticacion-config
           env:
             - name: MYSQL_USER
               valueFrom:
                 configMapKeyRef:
-                  name: autenticacion-configmap
+                  name: autenticacion-config
                   key: MYSQL_USER
 
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: autenticacion-secret
+                  name: autenticacion-db-secret
+                  key: MYSQL_ROOT_PASSWORD
+            - name: MYSQL_HOST
+              value: "mysql-service"
+            - name: MYSQL_PORT
+              value: "3306"
+      containers:
+        - name: autenticacion-app
+          image: dgomez9903/microservicio-autenticacion:1.0.0
+          ports:
+            - containerPort: 9292
+          imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: autenticacion-config
+          env:
+            - name: MYSQL_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: autenticacion-config
+                  key: MYSQL_USER
+
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: autenticacion-db-secret
                   key: MYSQL_ROOT_PASSWORD
