@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: autenticacion-app-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: autenticacion
+  template:
+    metadata:
+      labels:
+        app: autenticacion
+    spec:
+      containers:
+        - name: autenticacion-app
+          image: dgomez9903/microservicio-autenticacion:1.0.0
+          ports:
+            - containerPort: 9292
+          envFrom:
+            - configMapRef:
+                name: autenticacion-configmap
+          env:
+            - name: MYSQL_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: autenticacion-configmap
+                  key: MYSQL_USER
+
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: autenticacion-secret
+                  key: MYSQL_ROOT_PASSWORD

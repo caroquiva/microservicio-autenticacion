@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: autenticacion-service
+spec:
+  type: NodePort
+  ports:
+    - port: 9292
+      targetPort: 9292
+  selector:
+    app: autenticacion

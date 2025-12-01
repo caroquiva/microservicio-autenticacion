@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: autenticacion-mysql-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: autenticacion-mysql
+  template:
+    metadata:
+      labels:
+        app: autenticacion-mysql
+    spec:
+      containers:
+        - name: autenticacion-mysql
+          image: mysql:8.4.7
+          ports:
+            - containerPort: 3306
+          envFrom:
+            - secretRef:
+                name: autenticacion-db-secret
+            - configMapRef:
+                name: autenticacion-config
+          volumeMounts:
+            - name: mysql-persistent-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: autenticacion-mysql-pv

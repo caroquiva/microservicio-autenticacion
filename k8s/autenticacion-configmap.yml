@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: autenticacion-config
+data:
+  MYSQL_DATABASE: "genosentinel"
+  MYSQL_USER: "root"
+  SPRING_DATASOURCE_URL: "jdbc:mysql://autenticacion-mysql-service:3306/genosentinel"
